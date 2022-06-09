@@ -1,10 +1,10 @@
 {
-  "name": "wpp-ide",
+  "name": "tg-ide",
   "version": "0.0.1",
-  "description": "wpp-ide CLI",
+  "description": "tg-ide CLI",
   "private": true,
   "bin": {
-    "wpp-ide": "bin/wpp-ide"
+    "tg-ide": "bin/tg-ide"
   },
   "scripts": {
     "format": "eslint \"**/*.{js,jsx}\" --fix && prettier \"**/*.{js,jsx,json}\" --write",

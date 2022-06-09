@@ -6,10 +6,10 @@ module.exports = (toolbox) => {
   }
 
   // enable this if you want to read configuration in from
-  // the current folder's package.json (in a "wpp-ide" property),
-  // wpp-ide.config.json, etc.
+  // the current folder's package.json (in a "tg-ide" property),
+  // tg-ide.config.json, etc.
   // toolbox.config = {
   //   ...toolbox.config,
-  //   ...toolbox.config.loadConfig("wpp-ide", process.cwd())
+  //   ...toolbox.config.loadConfig("tg-ide", process.cwd())
   // }
 }

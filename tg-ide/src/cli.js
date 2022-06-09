@@ -6,9 +6,9 @@ const { build } = require('gluegun')
 async function run(argv) {
   // create a CLI runtime
   const cli = build()
-    .brand('wpp-ide')
+    .brand('tg-ide')
     .src(__dirname)
-    .plugins('./node_modules', { matching: 'wpp-ide-*', hidden: true })
+    .plugins('./node_modules', { matching: 'tg-ide-*', hidden: true })
     .help() // provides default for help, h, --help, -h
     .version() // provides default for version, v, --version, -v
     .create()

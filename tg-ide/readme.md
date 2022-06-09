@@ -1,6 +1,6 @@
-# wpp-ide CLI
+# tg-ide CLI
 
-A CLI for wpp-ide.
+A CLI for tg-ide.
 
 ## Customizing your CLI
 
