@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +19,11 @@
   },
   "homepage": "https://github.com/theJoseNeto/telegram-IDE-#readme",
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.1",
+    "nodemon": "^2.0.16"
   }
 }
