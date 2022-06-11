@@ -35,17 +35,14 @@ class TelegramBot {
 
             const messageData = {};
 
-            // const isAMessage = "text" === message['result'][-1]["message"];
             const lastIndex = message.data.result.length - 1;
             
-            // console.log(message.data.result[lastIndex]["update_id"])
             if (message.data.result.length > 0) {
                 messageData["data"] = message;
                 messageData["update_id"] = message.data["result"][lastIndex]["update_id"];
                 messageData["message_id"] = message.data["result"][lastIndex]["message"]["message_id"];
                 messageData["message_from"] = message.data["result"][lastIndex]["message"]["from"]["first_name"];
                 messageData["message_text"] = message.data["result"][lastIndex]["message"]["text"];
-
             }
 
             return messageData;
@@ -82,9 +79,10 @@ class TelegramBot {
 
     sendMessage = async text => {
         let chatID = this.chat_id;
-        const url = `${this.apiConnectionUrl}/sendMessage?chat_id=${chatID}&text=${text}`;
+        const url = `${this.apiConnectionUrl}/sendMessage?chat_id=${chatID}&text=${text.toLocaleLowerCase()}`;
         await axios.get(url);
     }
+    
 
 
 }
