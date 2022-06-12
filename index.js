@@ -1,23 +1,39 @@
 require('dotenv').config();
-const fs = require("fs").promises;
-const {
-    resolve
-} = require('path');
-const TelegramBot = require("./bot-telegram");
 
-const data = "console.log('hello world!')"; // Message from telegram;
+const {
+    exec
+} = require("child_process");
+const TelegramBot = require("./bot-telegram");
+const {
+    createFile
+} = require('./src/modules/fileCreator');
 
 const token = process.env.TELEGRAM_URL_CONNECTION;
 const bot = new TelegramBot(token, '-1001387626450');
 
-bot.getMessageData().then(messageData => {
+const run = async () => {
 
-    const createFile = async (fileName, typeFile, content) => {
-        const outputPath = resolve(__dirname, "output");
-        await fs.writeFile(resolve(outputPath, `${fileName}.${typeFile}`), content);
-    }
+    const message = (await bot.getMessageData()).message_text;
 
-    createFile('test', "js", messageData.message_text);
+    await createFile('index', "js", message)
+        .then(() => {
 
-});
+            exec('node ./src/output/index.js', async (error, stdout, stderr) => {
+                
+                if (error) {
+                    console.log(`Erro: ${error}`);
+                    return;
+                }
+                if (stderr) {
+                    console.log(`stderr: ${stderr}`);
+                    return;
+                }
 
+                console.log(`out: ${stdout}`);
+
+            });
+        });
+}
+
+
+run();

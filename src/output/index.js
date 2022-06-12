@@ -1,0 +1,1 @@
+function helloDev(devName){ console.log("olá", devName)}
