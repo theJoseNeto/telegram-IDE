@@ -18,11 +18,11 @@ const bot = new TelegramBot(token, '-1001387626450');
 // const intervael = setInterval(async () => {
 const run = async ()=>{
     const message = (await bot.getMessageData()).message_text;
-        
-    await createFile(pathToInput,'index', "js", message)
+    const inputFileName = "input";
+    await createFile(pathToInput, `${inputFileName}`, "js", message)
         .then(() => {
-            exec(`node ./src/output/index.js > ./src/input-output/output/log-file.txt`,
-           
+
+            exec(`node ./src/input-output/input/${inputFileName}.js > ./src/input-output/output.txt`,
             (error, stdout, stderr) => {
                 if (error) {console.log(`Erro: ${error}`); return;}
                 if (stderr) {console.log(`stderr: ${stderr}`);return;}
@@ -30,6 +30,7 @@ const run = async ()=>{
             });
         })
      }
+     
      run();
         
     // }, 1000);
