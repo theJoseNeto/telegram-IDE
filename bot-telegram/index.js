@@ -10,24 +10,6 @@ class TelegramBot {
     }
 
 
-    messageWatcher = () => {
-
-        const message_data = this.getMessageData()
-
-        if (message_data == {}) return;
-
-        const message = message_data["message_text"];
-
-
-        const update_id = message_data["update_id"];
-        const all_right = !this.answeredMessages[0] === update_id;
-
-        if (all_right) {
-            const response = "hello world";
-            this.sendMessage(response);
-            this.answered_messages[0] = update_id;
-        }
-    }
 
     getMessageData = async () => {
 
