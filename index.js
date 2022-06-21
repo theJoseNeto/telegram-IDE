@@ -1,36 +1,60 @@
 require('dotenv').config();
 
 const { resolve } = require('path');
-const {exec} = require("child_process");
+const { exec } = require("child_process");
 
 const { cleanFiles } = require('./src/modules/cleanUp');
-const {createFile} = require('./src/modules/fileCreator');
+const { createFile } = require('./src/modules/fileCreator');
 
-const pathToInput = resolve('src', "input-output", "input")
-// const pathToOutput = resolve('src', "input-output","output")
+const pathToInput = resolve('src', "inputOutput", "input")
 
 const TelegramBot = require("./bot-telegram");
+const { readFileSync } = require('fs');
 const token = process.env.TELEGRAM_URL_CONNECTION;
-const bot = new TelegramBot(token, '-1001387626450');
+const { sendMessage, getMessageData } = new TelegramBot(token);
 
 
 
 // const intervael = setInterval(async () => {
-const run = async ()=>{
-    const message = (await bot.getMessageData()).message_text;
+const run = async () => {
+    const messageData = await getMessageData();
+    
     const inputFileName = "input";
-    await createFile(pathToInput, `${inputFileName}`, "js", message)
+    await createFile(pathToInput, `${inputFileName}`, "js", messageData.message_text)
         .then(() => {
 
-            exec(`node ./src/input-output/input/${inputFileName}.js > ./src/input-output/output.txt`,
-            (error, stdout, stderr) => {
-                if (error) {console.log(`Erro: ${error}`); return;}
-                if (stderr) {console.log(`stderr: ${stderr}`);return;}
-                console.log(`Success!`);
+            return new Promise((resolve, reject) => {
+                exec(`node ./src/inputOutput/input/${inputFileName}.js > ./src/inputOutput/output/output.txt`,
+                    async (error, stdout, stderr) => {
+                        if (error) { console.log(`Erro: ${error}`); return; }
+                        if (stderr) { console.log(`stderr: ${stderr}`); return; }
+
+                        try {
+                            const content = readFileSync("./src/inputOutput/output/output.txt", "utf8");
+                            resolve(content);
+
+                        } catch (error) {
+                            reject(error);
+                        }
+                    });
+
+            }).then(async output => {
+                try{
+                    // console.log(messageData)
+                    await sendMessage(output, messageData.chatId);
+                }catch(e) {
+                    const erro = {
+                        erro: e.response.statusText,
+                        statusCode: e.response.status, 
+                        ErrorDescription: e.response.data.description
+                    }
+                    console.log(erro)
+                }
             });
-        })
-     }
-     
-     run();
-        
+
+        });
+
+}
+
+run();
     // }, 1000);
