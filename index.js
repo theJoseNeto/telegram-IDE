@@ -15,7 +15,7 @@ const { sendMessage, getMessageData } = new TelegramBot(token);
 
 
 
-// const intervael = setInterval(async () => {
+setInterval(async () => {
 const run = async () => {
     const messageData = await getMessageData();
     
@@ -57,4 +57,4 @@ const run = async () => {
 }
 
 run();
-    // }, 1000);
+    }, 1000);

@@ -15,13 +15,13 @@ class TelegramBot {
         return await axios.get(`${this.apiConnectionUrl}/getUpdates`).then(message => {
 
             const messageData = {};
-            // console.log(message);
             const lastIndex = message.data.result.length - 1;
+            console.log(message.data["result"][lastIndex]["message"]['chat']["id"]);
 
             if (message.data.result.length > 0) {
                 messageData["data"] = message;
                 messageData["update_id"] = message.data["result"][lastIndex]["update_id"];
-                messageData["chatId"] = message.data["result"][lastIndex]["chatId"];
+                messageData["chatId"] = message.data["result"][lastIndex]["message"]["chat"]["id"];
                 messageData["message_id"] = message.data["result"][lastIndex]["message"]["message_id"];
                 messageData["message_from"] = message.data["result"][lastIndex]["message"]["from"]["first_name"];
                 messageData["message_text"] = message.data["result"][lastIndex]["message"]["text"];
