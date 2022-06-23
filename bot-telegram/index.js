@@ -16,7 +16,6 @@ class TelegramBot {
 
             const messageData = {};
             const lastIndex = message.data.result.length - 1;
-            console.log(message.data["result"][lastIndex]["message"]['chat']["id"]);
 
             if (message.data.result.length > 0) {
                 messageData["data"] = message;
@@ -33,11 +32,27 @@ class TelegramBot {
 
     }
 
-    sendMessage = async (text, chatId) => {
+    sendMessage = async (text, chatId, update_id) => {
+        const userMessageIsAnsewered = this.messageIsAnsewered(update_id);
+        console.log(this.answeredMessages);
+        if(!userMessageIsAnsewered){
+            const sendMessage = `${this.apiConnectionUrl}/sendMessage?chat_id=${chatId}&text=${text}`;
+            await axios.get(sendMessage);
+            await this.saveAnseweredMessage(update_id);
+        } else {
+            console.log("essa mensagem já foi respondida");
+        }
 
-        const sendMessage = `${this.apiConnectionUrl}/sendMessage?chat_id=${chatId}&text=${text}`;
-        await axios.get(sendMessage);
     }
+    
+    saveAnseweredMessage = update_id => this.answeredMessages[0] = update_id;
+
+    messageIsAnsewered = update_id => {
+        let isAnswered = false;
+        if(update_id === this.answeredMessages[0]) isAnswered = true;
+        return isAnswered
+    }
+
 
 
 

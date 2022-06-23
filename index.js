@@ -11,50 +11,51 @@ const pathToInput = resolve('src', "inputOutput", "input")
 const TelegramBot = require("./bot-telegram");
 const { readFileSync } = require('fs');
 const token = process.env.TELEGRAM_URL_CONNECTION;
-const { sendMessage, getMessageData } = new TelegramBot(token);
+const { sendMessage, getMessageData, saveAnseweredMessage, messageIsAnsewered } = new TelegramBot(token);
 
 
 
 setInterval(async () => {
-const run = async () => {
-    const messageData = await getMessageData();
-    
-    const inputFileName = "input";
-    await createFile(pathToInput, `${inputFileName}`, "js", messageData.message_text)
-        .then(() => {
+    const run = async () => {
+        const {chatId, update_id, message_text} = await getMessageData();
 
-            return new Promise((resolve, reject) => {
-                exec(`node ./src/inputOutput/input/${inputFileName}.js > ./src/inputOutput/output/output.txt`,
-                    async (error, stdout, stderr) => {
-                        if (error) { console.log(`Erro: ${error}`); return; }
-                        if (stderr) { console.log(`stderr: ${stderr}`); return; }
+        const inputFileName = "input";
+        await createFile(pathToInput, `${inputFileName}`, "js", message_text)
+            .then(() => {
 
-                        try {
-                            const content = readFileSync("./src/inputOutput/output/output.txt", "utf8");
-                            resolve(content);
+                return new Promise((resolve, reject) => {
+                    exec(`node ./src/inputOutput/input/${inputFileName}.js > ./src/inputOutput/output/output.txt`,
+                        async (error, stdout, stderr) => {
+                            if (error) { console.log(`Erro: ${error}`); return; }
+                            if (stderr) { console.log(`stderr: ${stderr}`); return; }
 
-                        } catch (error) {
-                            reject(error);
+                            try {
+                                const content = readFileSync("./src/inputOutput/output/output.txt", "utf8");
+                                resolve(content);
+
+                            } catch (error) {
+                                reject(error);
+                            }
+                        });
+
+                }).then(async output => {
+                    try {
+
+                        await sendMessage(output, chatId, update_id);
+
+                    } catch (e) {
+                        const erro = {
+                            erro: e.response.statusText,
+                            statusCode: e.response.status,
+                            ErrorDescription: e.response.data.description
                         }
-                    });
-
-            }).then(async output => {
-                try{
-                    // console.log(messageData)
-                    await sendMessage(output, messageData.chatId);
-                }catch(e) {
-                    const erro = {
-                        erro: e.response.statusText,
-                        statusCode: e.response.status, 
-                        ErrorDescription: e.response.data.description
+                        console.log(erro)
                     }
-                    console.log(erro)
-                }
+                });
+
             });
 
-        });
+    }
 
-}
-
-run();
-    }, 1000);
+    run();
+}, 1000);

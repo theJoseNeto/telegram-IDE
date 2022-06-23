@@ -1,5 +1,6 @@
-function helloDev(name){
-     console.log("hello", name);
+function teste(a){
+return a
 }
 
-helloDev("Gabriel");
+const result = teste("cavalo");
+console.log(result)
